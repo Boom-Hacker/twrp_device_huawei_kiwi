@@ -1,26 +1,8 @@
-#
-# Copyright (C) 2021 The Honor5X JIMDO TEAM
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 DEVICE_PATH := device/huawei/kiwi
-
-TARGET_SPECIFIC_HEADER_PATH := $(DEVICE_PATH)/include
-
+TARGET_SUPPORTS_64_BIT_APPS := true
 # Platform
 TARGET_BOARD_PLATFORM := msm8916
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno405
-
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
@@ -37,26 +19,19 @@ TARGET_2ND_CPU_VARIANT := cortex-a53
 TARGET_BOARD_SUFFIX := _64
 TARGET_USES_64_BIT_BINDER := true
 TARGET_BOARD_PLATFORM := msm8916
-
 # Qualcomm support
 BOARD_USES_QC_TIME_SERVICES := true
 BOARD_USES_QCOM_HARDWARE := true
-
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := MSM8916
-TARGET_NO_BOOTLOADER := true
+#TARGET_NO_BOOTLOADER := true
 TARGET_OTA_ASSERT_DEVICE := kiwi
-
 # Kernel
-TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/recovery/prebuilt/zImage
-TARGET_PREBUILT_RECOVERY_KERNEL := $(DEVICE_PATH)/recovery/prebuilt/zImage
-BOARD_KERNEL_IMAGE_NAME := /media/boomhacker/Lineage/OrangeFox/kernel/huawei/kiwi/arch/arm64/boot
+BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1
 BOARD_KERNEL_BASE := 0x80000000
-BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 androidboot.bootdevice=7824900.sdhci lpm_levels.sleep_disabled=1 earlyprintk
 BOARD_KERNEL_PAGESIZE := 2048
-BOARD_MKBOOTIMG_ARGS := --dt $(DEVICE_PATH)/recovery/prebuilt/dt.img
-
-# Partitions
+BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
+# Partition
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
@@ -69,36 +44,26 @@ BOARD_USERDATAIMAGE_PARTITION_SIZE := 11618204672
 BOARD_CACHEIMAGE_PARTITION_SIZE := 268435456
 BOARD_PERSISTIMAGE_PARTITION_SIZE := 67108864
 BOARD_FLASH_BLOCK_SIZE := 131072 # blockdev --getbsz /dev/block/mmcblk0p19
-
-# Vold
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/msm_hsusb/gadget/lun%d/file
-
-# OrangeFox Recovery
-#OF_FL_PATH1 := /sys/class/leds/torch-light
-#FOX_USE_TAR_BINARY := 1
-OF_MAINTAINER := Boom_Hacker
-
+# Prebuilt Kernel
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz-dtb
+# Recovery 
+TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/fstab
+BOARD_RECOVERY_SWIPE := true
 # TWRP
-RECOVERY_VARIANT := twrp
-TWHAVE_SELINUX := true
 TW_THEME := portrait_hdpi
-BOARD_HAS_LARGE_FILESYSTEM := true
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/etc/twrp.fstab
 BOARD_HAS_NO_REAL_SDCARD := true
 RECOVERY_SDCARD_ON_DATA := true
-TARGET_RECOVERY_QCOM_RTC_FIX := true
-TW_INCLUDE_NTFS_3G := true
-TW_INCLUDE_CRYPTO := true
-#TARGET_HW_DISK_ENCRYPTION := true
-BOARD_SUPPRESS_SECURE_ERASE := true
-RECOVERY_GRAPHICS_USE_LINELENGTH := true
-TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
-BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
-TW_USE_TOOLBOX := true
-TW_EXTRA_LANGUAGES := true
-TW_MAX_BRIGHTNESS := 255
+TW_NO_BATT_PERCENT := true
+#Mainline Boot Image can't boot without lk2nd,so we only can go into Recovery Mode in lk2nd fastboot menu
+TW_NO_REBOOT_RECOVERY:= true
+#lk1st fastboot mode is instead of lk2nd (fake) fastboot mode
+TW_NO_REBOOT_BOOTLOADER:= true
 TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
-TW_NO_EXFAT_FUSE := true
-#TWRP_INCLUDE_LOGCAT := true
-#TARGET_USES_LOGD := true
-TW_INPUT_BLACKLIST := "accelerometer"
+TW_EXTRA_LANGUAGES := true
+TW_EXCLUDE_MTP := true
+TW_INCLUDE_CRYPTO := true
+TWRP_INCLUDE_LOGCAT := true
+TW_NO_SCREEN_TIMEOUT := true
+TARGET_RECOVERY_DEVICE_DIRS += $(DEVICE_PATH)
+ALLOW_MISSING_DEPENDENCIES := true
